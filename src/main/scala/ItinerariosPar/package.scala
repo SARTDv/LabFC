@@ -81,7 +81,8 @@ package object ItinerariosPar {
   def itinerariosTiempoPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
     (cod1: String, cod2: String) => {
       val listaItinerarios = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
-      listaItinerarios.sortBy(itinerario => tiempoAcumulado(itinerario, aeropuertos, 0)).take(3)
+      val listaParela = listaItinerarios map (it => (it, task(tiempoAcumulado(it, aeropuertos, 0))))
+      listaParela.sortBy(_._2.join).unzip._1.take(3)
     }
   }
 
