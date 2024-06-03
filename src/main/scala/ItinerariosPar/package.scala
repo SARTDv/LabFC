@@ -79,6 +79,25 @@ package object ItinerariosPar {
     }
   }
 
+  //Funcion 4.1.01
+  def itinerariosParP(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
+
+    def TodosLosItinerarios(origen: String, destino: String, aeropuertosVisitados: Set[String]): List[Itinerario] = {
+      if (origen == destino) { return List(List.empty) }
+
+      val vuelosT = for {
+        vuelo <- vuelos.filter(_.Org == origen)
+        if (!aeropuertosVisitados.contains(vuelo.Dst))
+      } yield task(TodosLosItinerarios(vuelo.Dst, destino, aeropuertosVisitados + vuelo.Dst).map(vuelo :: _))
+
+      vuelosT.flatMap(vuelos => vuelos.join)
+      }
+
+    (cod1: String, cod2: String) => {
+      TodosLosItinerarios(cod1, cod2, Set(cod1))
+    }
+  }
+
   //Funcion 4.2
   def itinerariosTiempoPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
     (cod1: String, cod2: String) => {
