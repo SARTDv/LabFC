@@ -61,27 +61,6 @@ package object ItinerariosPar {
   //Funcion 4.1
   def itinerariosPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
 
-    def TodosLosItinerarios(origen: String, destino: String, aeropuertosVisitados: ParSet[String]): List[Itinerario] = {
-      if (origen == destino) { return List(List.empty) }
-
-      vuelos.par.filter(_.Org == origen).flatMap { vuelo =>
-        if (!aeropuertosVisitados.contains(vuelo.Dst)) {
-          val subItinerarios = TodosLosItinerarios(vuelo.Dst, destino,  aeropuertosVisitados + vuelo.Dst)
-          (subItinerarios.par).map(vuelo :: _ )
-        } else {
-          List()
-        }
-      }.toList
-    }
-
-    (cod1: String, cod2: String) => {
-      TodosLosItinerarios(cod1, cod2, ParSet(cod1))
-    }
-  }
-
-  //Funcion 4.1.01
-  def itinerariosParP(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
-
     def TodosLosItinerarios(origen: String, destino: String, aeropuertosVisitados: Set[String]): List[Itinerario] = {
       if (origen == destino) { return List(List.empty) }
 
@@ -107,7 +86,7 @@ package object ItinerariosPar {
   }
 
   //Funcion 4.3
-  def itinerariosEscalas(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
+  def itinerariosEscalasPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
 
     (cod1: String, cod2: String) => {
       val listaItinerarios = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
