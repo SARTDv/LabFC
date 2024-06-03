@@ -89,21 +89,21 @@ package object Itinerarios {
 
   //Funcion 3.4
   def itinerariosAire(vuelos:List[Vuelo], aeropuertos:List[Aeropuerto]):(String, String) => List[Itinerario] = {
-    //Obtiene todos los itinerarios podibles
+    //Obtiene todos los itinerarios posibles
     val funcionItinerario = itinerarios(vuelos, aeropuertos)
     //Calcula el tiempo total de un solo vuelo
-    def funTiempo(vuelo:Vuelo):Double = {
+    def funTiempo(vuelo:Vuelo):Int = {
       val a1 = aeropuertos.filter(_.Cod == vuelo.Org)
       val a2 = aeropuertos.filter(_.Cod == vuelo.Dst)
       val gmtSalida = (a1.head).GMT/100
       val gmtLlegada = (a2.head).GMT/100
-      val horaSalida = (vuelo.HS + (vuelo.MS.toDouble/60)) - gmtSalida
-      val horaLlegada = (vuelo.HL + (vuelo.ML.toDouble/60)) - gmtLlegada
+      val horaSalida = ((vuelo.HS*60) + vuelo.MS) - gmtSalida
+      val horaLlegada = ((vuelo.HL*60) + vuelo.ML) - gmtLlegada
       val tiempoVuelo = horaLlegada - horaSalida
-      if (tiempoVuelo <= 0) 24 + tiempoVuelo else tiempoVuelo
+      if (tiempoVuelo <= 0) (24*60) + tiempoVuelo else tiempoVuelo
     }
     //Calcula el tiempo total de vuelo de un itinerario
-    def calcularTiempo (v:Itinerario):Double = {
+    def calcularTiempo (v:Itinerario):Int = {
       (v map (i => funTiempo(i))).sum
     }
     //Funcion de salida, calcula los tres itinerarios que tienen menor tiempo en el aire
