@@ -4,7 +4,7 @@ import ItinerariosPar._
 import org.scalameter._
 package object Benchmark {
   type AlgoritmoItinerarios = (List[Vuelo], List[Aeropuerto]) => (String, String) => List[Itinerario]
-  type AlgoritmoItinerarioSalida = (List[Vuelo], List[Aeropuerto]) => (String, String, Int, Int) => List[Itinerario]
+  type AlgoritmoItinerarioSalida = (List[Vuelo], List[Aeropuerto]) => (String, String, Int, Int) => Itinerario
 
   def compararAlgoritmos(a1:AlgoritmoItinerarios, a2:AlgoritmoItinerarios)
                         (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
