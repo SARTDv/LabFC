@@ -103,25 +103,17 @@ package object ItinerariosPar {
   def itinerariosAirePar(vuelos : List [ Vuelo ] , aeropuertos : List [ Aeropuerto] ) : ( String , String )=>List [Itinerario ]= {
     //Obtiene todos los itinerarios podibles
     val funcionItinerarioPar = itinerariosPar(vuelos, aeropuertos)
-
     //Calcula el tiempo total de un solo vuelo
-    def funTiempoPar(vuelo:Vuelo):Double = {
-            
-        val a1 = task(aeropuertos.par.filter(_.Cod == vuelo.Org))
-        val a2 = task(aeropuertos.par.filter(_.Cod == vuelo.Dst))
-
-        val gmtSalida = task((a1.join().head).GMT/100)
-        val gmtLlegada = task((a2.join().head).GMT/100)
-
-        val horaSalida = task((vuelo.HS + (vuelo.MS.toDouble/60)) - gmtSalida.join())
-        val horaLlegada = task((vuelo.HL + (vuelo.ML.toDouble/60)) - gmtLlegada.join())
-        val tiempoVuelo = horaLlegada.join() - horaSalida.join()
-            
-        if (tiempoVuelo <= 0) 24 + tiempoVuelo else tiempoVuelo
+    def funTiempoPar(vuelo:Vuelo):Int = {    
+        val (a1, a2) = parallel(aeropuertos.par.filter(_.Cod == vuelo.Org), aeropuertos.par.filter(_.Cod == vuelo.Dst) )
+        val (gmtSalida, gmtLlegada) = parallel((a1.head).GMT/100, (a2.head).GMT/100)
+        val (horaSalida, horaLlegada) = parallel(( (vuelo.HS *60) + vuelo.MS) - gmtSalida, (vuelo.HL*60 + vuelo.ML) - gmtLlegada)
+        val tiempoVuelo = horaLlegada - horaSalida
+        if (tiempoVuelo <= 0) (24*60) + tiempoVuelo else tiempoVuelo
     }
 
     //Calcula el tiempo total de vuelo de un itinerario
-    def calcularTiempoPar (v:Itinerario):Double = {
+    def calcularTiempoPar (v:Itinerario):Int = {
         val cadaTiempo =  v.par map (i => task(funTiempoPar(i)))
         (cadaTiempo map (l => l.join())).sum
     }
@@ -129,15 +121,13 @@ package object ItinerariosPar {
     //Funcion de salida, calcula los tres itinerarios que tienen menor tiempo en el aire
     def miItinerarioPar (aeropuerto1:String, aeropuerto2:String): List[Itinerario] = {
         val misItinerariosPar = funcionItinerarioPar(aeropuerto1, aeropuerto2)
-
         if (misItinerariosPar.length <= 3) misItinerariosPar
         else {
             val tiempos = misItinerariosPar map (c => (c, task(calcularTiempoPar(c))))
             val salida = tiempos.sortBy(_._2.join())
-            (((salida.unzip)._1).toList).take(3)
+            (salida.unzip)._1.take(3)
         }
     }
-
     miItinerarioPar
   }
 
