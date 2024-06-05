@@ -28,6 +28,7 @@ package object ItinerariosPar {
   }
 
   def tiempoAcumulado(vuelos: Itinerario,aeropuertos: List[Aeropuerto], tiempoActual: Int): Int = vuelos match {
+    case Nil => 0
     case vuelo :: Nil =>
       // Ultimo vuelo, solo sumar el tiempo de vuelo si el tiempo de vuelo es negativo, se añade un dia
       val (gmtFormateadoDst, gmtFormateadoOrg) = parallel(gmtDeAeropuertoPar(aeropuertos,vuelo.Dst), gmtDeAeropuertoPar(aeropuertos,vuelo.Org))
@@ -138,14 +139,13 @@ package object ItinerariosPar {
       val itinerario = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
 
       def calcularTiempoTotal(itinerario: Itinerario): Int = {
-        val ultimoVuelo = task(itinerario.par.last)
-        val minutosCita = task(h*60 + m)
-        val minutosLlegada = task(ultimoVuelo.join.HL*60 + ultimoVuelo.join.ML)
-        val tiempoAdicional = if (minutosCita.join >= minutosLlegada.join) minutosCita.join-minutosLlegada.join else {minutosCita.join-minutosLlegada.join + 24 * 60}
+        val (ultimoVuelo,minutosCita) = parallel(itinerario.last,h*60 + m)
+        val minutosLlegada = ultimoVuelo.HL*60 + ultimoVuelo.ML
+        val tiempoAdicional = if (minutosCita >= minutosLlegada) minutosCita-minutosLlegada else {minutosCita-minutosLlegada + 24 * 60}
         tiempoAcumulado(itinerario, aeropuertos, tiempoAdicional)
       }
 
       itinerario.minByOption { listaVuelos => calcularTiempoTotal(listaVuelos) }
-      }.getOrElse(List.empty)
+    }.getOrElse(List.empty)
   }
 }
