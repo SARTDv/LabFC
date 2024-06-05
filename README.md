@@ -56,7 +56,8 @@ Los anteriores comandos hacen que los paquetes sean considerados para llevar a c
 ### Ejecucion
 
 Para las funciones excepto itinerarioSalida se debe invocar de la siguiente manera:
-_funcion_(vuelos,aeropuertos)(códigoOrigen,códigoDestino)
+
+` \*funcion\*(vuelos,aeropuertos)(códigoOrigen,códigoDestino) `
 
 En donde: 
 
@@ -66,7 +67,8 @@ En donde:
 - CodigoDestino, cadena que refiere al aeropuerto destino
 
 Para la función itinerario salida:
-_itinerarioSalida_(vuelos,aeropuertos)(codigoOrigen,codigoDestino,h,m)
+
+` \*itinerarioSalida\*(vuelos,aeropuertos)(códigoOrigen,códigoDestino,h,m) `
 
 En donde: 
 
@@ -77,7 +79,7 @@ En donde:
 
 Cada función cuenta con una versión en la que se usa paralelizacion de tareas y datos, esta función se usa exactamente igual que su versión secuencial con la diferencia de que a su nombre de añade "Par":
 
-*funcion*Par(...)(...)
+` \*funcion\*Par(...)(...) `
 
 Estas funciones deben usarse con cuidado, puesto que para una cantidad de datos pequeña el costo y tiempo de ejecución son mayores a su versión secuencial.
 
@@ -86,9 +88,13 @@ Estas funciones deben usarse con cuidado, puesto que para una cantidad de datos 
 Por último, es posible analizar la diferencia de velocidad entre dos búsquedas de itinerarios para los mismos datos, esto se puede hacer de la siguiente manera:
 
 ### Para todas a excepcion de _itinerarioSalida_
-_compararAlgoritmos_(a1:AlgoritmoItinerarios, a2:AlgoritmoItinerarios)
-                    (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
-                    (cod1: String, cod2: String)
+```
+\*compararAlgoritmos\*(a1:AlgoritmoItinerario, a2:AlgoritmoItinerario)
+
+                      (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
+                          
+                      (cod1: String, cod2: String )
+```
 
 En donde: 
 
@@ -98,9 +104,14 @@ En donde:
 
 ### Para _itinerarioSalida_
 
-_compararAlgoritmosSalida_(a1:AlgoritmoItinerarioSalida, a2:AlgoritmoItinerarioSalida)
-                          (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
-                          (cod1: String, cod2: String, h:Int, m:Int )
+```
+\*compararAlgoritmosSalida\*(a1:AlgoritmoItinerarioSalida, a2:AlgoritmoItinerarioSalida)
+
+                            (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
+                          
+                            (cod1: String, cod2: String, h:Int, m:Int )
+```
+                          
                           
 En donde: 
 
