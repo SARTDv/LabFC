@@ -139,7 +139,7 @@ package object ItinerariosPar {
       val itinerario = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
 
       def calcularTiempoTotal(itinerario: Itinerario): Int = {
-        val (ultimoVuelo,minutosCita) = parallel(itinerario.last,h*60 + m)
+        val (ultimoVuelo,minutosCita) = (itinerario.last,h*60 + m)
         val minutosLlegada = ultimoVuelo.HL*60 + ultimoVuelo.ML
         val tiempoAdicional = if (minutosCita >= minutosLlegada) minutosCita-minutosLlegada else {minutosCita-minutosLlegada + 24 * 60}
         tiempoAcumulado(itinerario, aeropuertos, tiempoAdicional)
