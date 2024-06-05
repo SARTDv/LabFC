@@ -1,5 +1,5 @@
-# LabFC
-Laboratorio funcional y concurrente 2024-I
+# Proyecto programación funcional y concurrente
+Proyecto funcional y concurrente 2024-I por Alejandro Muñoz y Sheila Valencia, a cargo de Juan Francisco Díaz
 
 ## Informacion básica
 **Nota: el código se basa en un 100% en scala, sin embargo debido a sbt puede fallar en ciertos sistemas operativos.**
