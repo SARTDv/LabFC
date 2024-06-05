@@ -38,11 +38,11 @@ En el directorio en el que se encuentra el archivo "sbt" posterior al clonado de
 
 ```sbt``` 
 
-Este Permite iniciar el compilador a base de ciertos requerimientos
+Este Permite iniciar el compilador a base de ciertos requerimientos.
 
 ```console```
 
-Permite ingresar a la consola de scala
+Permite ingresar a la consola de scala.
 
 ```
 import Datos._
@@ -51,35 +51,35 @@ import ItinerariosPar._
 import Benchmark._
 ```
 
-Los anteriores comandos hacen que los paquetes sean considerados para llevar a cabo las funciones dentro de los mismos
+Los anteriores comandos hacen que los paquetes sean considerados para llevar a cabo las funciones dentro de los mismos.
 
 ### Ejecucion
 
 Para las funciones excepto itinerarioSalida se debe invocar de la siguiente manera:
 
-*funcion*(vuelos,aeropuertos)(códigoOrigen,códigoDestino)
+*funcion* (vuelos,aeropuertos)(códigoOrigen,códigoDestino)
 
 En donde: 
 
-- vuelos es la lista de vuelos para los que se desea calcular itinerarios, este valor se encuentra dentro del paquete Datos
-- aeropuertos, lista de aeropuertos encontrada en el paquete Datos
-- CodigoOrigen, es una cadena de caracteres que se refiere al código del aeropuerto de origen
-- CodigoDestino, cadena que refiere al aeropuerto destino
+- vuelos es la lista de vuelos para los que se desea calcular itinerarios, este valor se encuentra dentro del paquete Datos.
+- aeropuertos, lista de aeropuertos encontrada en el paquete Datos.
+- CodigoOrigen, es una cadena de caracteres que se refiere al código del aeropuerto de origen.
+- CodigoDestino, cadena que refiere al aeropuerto destino.
 
 Para la función itinerario salida:
 
-*itinerarioSalida*(vuelos, aeropuertos) (códigoOrigen, códigoDestino, h, m)
+*itinerarioSalida* (vuelos, aeropuertos) (códigoOrigen, códigoDestino, h, m)
 
 En donde: 
 
-- Vuelos,aeropuertos se refiere a las listas encontradas en Datos
-- CodigoOrigen, codigoDestino refiere a los códigos de los aeropuertos de inicio y destino respectivamente
-- H, hora de la cita con gmt del aeropuerto destino
-- M, minutos de la cita con gmt del aeropuerto de destino
+- Vuelos,aeropuertos se refiere a las listas encontradas en Datos.
+- CodigoOrigen, codigoDestino refiere a los códigos de los aeropuertos de inicio y destino respectivamente.
+- H, hora de la cita con gmt del aeropuerto destino.
+- M, minutos de la cita con gmt del aeropuerto de destino.
 
 Cada función cuenta con una versión en la que se usa paralelizacion de tareas y datos, esta función se usa exactamente igual que su versión secuencial con la diferencia de que a su nombre de añade "Par":
 
-*funcion*Par(...)(...)
+*funcion* Par(...)(...)
 
 Estas funciones deben usarse con cuidado, puesto que para una cantidad de datos pequeña el costo y tiempo de ejecución son mayores a su versión secuencial.
 
@@ -89,13 +89,13 @@ Por último, es posible analizar la diferencia de velocidad entre dos búsquedas
 
 ### Para todas a excepcion de _itinerarioSalida_
 
-*compararAlgoritmos*(a1:AlgoritmoItinerario, a2:AlgoritmoItinerario)(vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])(cod1: String, cod2: String )
+*compararAlgoritmos* (a1:AlgoritmoItinerario, a2:AlgoritmoItinerario)(vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])(cod1: String, cod2: String )
 
 En donde: 
 
-- a1 y a2 son las funciones que se desean analizar
-- vuelos,aeropuertos se refieren a las listas encontradas en Datos
-- cod1,cod2 se refieren a los códigos de aeropuertos origen y destino respectivamente
+- a1 y a2 son las funciones que se desean analizar.
+- vuelos,aeropuertos se refieren a las listas encontradas en Datos.
+- cod1,cod2 se refieren a los códigos de aeropuertos origen y destino respectivamente.
 
 ### Para _itinerarioSalida_
 
@@ -103,16 +103,16 @@ En donde:
                            
 En donde: 
 
-- a1 y a2 son las funciones que se desean analizar
-- vuelos,aeropuertos se refieren a las listas encontradas en Datos
-- cod1,cod2 se refieren a los códigos de aeropuertos origen y destino respectivamente
-- h,m hora y minutos de la cita en gmt de destino
+- a1 y a2 son las funciones que se desean analizar.
+- vuelos,aeropuertos se refieren a las listas encontradas en Datos.
+- cod1,cod2 se refieren a los códigos de aeropuertos origen y destino respectivamente.
+- h,m hora y minutos de la cita en gmt de destino.
 
 ### Resultados
 Los resultados de aplicar estas dos funciones son:
 
-(TiempoPrimera,TiempoSegunda,aceleración)
+_(TiempoPrimera,TiempoSegunda,aceleración)_
 
-- TiempoPrimera se refiere al tiempo que de tardó la primera función para los argumentos dados
-- TiempoSegunda tiempo que se tarda la segunda función con los argumentos dados
-- Aceleración, refiere a aceleración de la segunda función con respecto a la primera, si esta es menor a 1 significa que la segunda función se tarda más que la primera
+- TiempoPrimera se refiere al tiempo que de tardó la primera función para los argumentos dados.
+- TiempoSegunda tiempo que se tarda la segunda función con los argumentos dados.
+- Aceleración, refiere a aceleración de la segunda función con respecto a la primera, si esta es menor a 1 significa que la segunda función se tarda más que la primera.
