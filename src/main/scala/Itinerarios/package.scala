@@ -51,14 +51,12 @@ package object Itinerarios {
     def TodosLosItinerarios(origen: String, destino: String, aeropuertosVisitados: Set[String]): List[Itinerario] = {
       if (origen == destino) { return List(List.empty) }
 
-      vuelos.filter(_.Org == origen).flatMap { vuelo =>
-        if (!aeropuertosVisitados.contains(vuelo.Dst)) {
-          val subItinerarios = TodosLosItinerarios(vuelo.Dst, destino,  aeropuertosVisitados + vuelo.Dst)
-          subItinerarios.map(vuelo :: _ )
-        } else {
-          List()
-        }
-      }
+      val vuelosT = for {
+        vuelo <- vuelos.filter(_.Org == origen)
+        if (!aeropuertosVisitados.contains(vuelo.Dst))
+      } yield TodosLosItinerarios(vuelo.Dst, destino, aeropuertosVisitados + vuelo.Dst).map(vuelo :: _)
+
+      vuelosT.flatten
     }
 
     (cod1: String, cod2: String) => {
