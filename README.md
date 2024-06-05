@@ -68,7 +68,7 @@ En donde:
 
 Para la función itinerario salida:
 
-*itinerarioSalida*(vuelos,aeropuertos)(códigoOrigen,códigoDestino,h,m)
+*itinerarioSalida*(vuelos, aeropuertos) (códigoOrigen, códigoDestino, h, m)
 
 En donde: 
 
@@ -89,11 +89,7 @@ Por último, es posible analizar la diferencia de velocidad entre dos búsquedas
 
 ### Para todas a excepcion de _itinerarioSalida_
 
-*compararAlgoritmos*(a1:AlgoritmoItinerario, a2:AlgoritmoItinerario)
-
-                    (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
-                          
-                    (cod1: String, cod2: String )
+*compararAlgoritmos*(a1:AlgoritmoItinerario, a2:AlgoritmoItinerario)(vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])(cod1: String, cod2: String )
 
 En donde: 
 
@@ -103,11 +99,7 @@ En donde:
 
 ### Para _itinerarioSalida_
 
-*compararAlgoritmosSalida*(a1:AlgoritmoItinerarioSalida, a2:AlgoritmoItinerarioSalida)
-
-                           (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
-                          
-                           (cod1: String, cod2: String, h:Int, m:Int )
+*compararAlgoritmosSalida*(a1:AlgoritmoItinerarioSalida, a2:AlgoritmoItinerarioSalida)(vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])(cod1: String, cod2: String, h:Int, m:Int )
                            
 En donde: 
 
