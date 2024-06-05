@@ -57,7 +57,7 @@ Los anteriores comandos hacen que los paquetes sean considerados para llevar a c
 
 Para las funciones excepto itinerarioSalida se debe invocar de la siguiente manera:
 
-` \*funcion\*(vuelos,aeropuertos)(códigoOrigen,códigoDestino) `
+*funcion*(vuelos,aeropuertos)(códigoOrigen,códigoDestino)
 
 En donde: 
 
@@ -68,7 +68,7 @@ En donde:
 
 Para la función itinerario salida:
 
-` \*itinerarioSalida\*(vuelos,aeropuertos)(códigoOrigen,códigoDestino,h,m) `
+*itinerarioSalida*(vuelos,aeropuertos)(códigoOrigen,códigoDestino,h,m)
 
 En donde: 
 
@@ -79,7 +79,7 @@ En donde:
 
 Cada función cuenta con una versión en la que se usa paralelizacion de tareas y datos, esta función se usa exactamente igual que su versión secuencial con la diferencia de que a su nombre de añade "Par":
 
-` \*funcion\*Par(...)(...) `
+*funcion*Par(...)(...)
 
 Estas funciones deben usarse con cuidado, puesto que para una cantidad de datos pequeña el costo y tiempo de ejecución son mayores a su versión secuencial.
 
@@ -88,13 +88,12 @@ Estas funciones deben usarse con cuidado, puesto que para una cantidad de datos 
 Por último, es posible analizar la diferencia de velocidad entre dos búsquedas de itinerarios para los mismos datos, esto se puede hacer de la siguiente manera:
 
 ### Para todas a excepcion de _itinerarioSalida_
-```
-\*compararAlgoritmos\*(a1:AlgoritmoItinerario, a2:AlgoritmoItinerario)
 
-                      (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
+*compararAlgoritmos*(a1:AlgoritmoItinerario, a2:AlgoritmoItinerario)
+
+                    (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
                           
-                      (cod1: String, cod2: String )
-```
+                    (cod1: String, cod2: String )
 
 En donde: 
 
@@ -104,15 +103,12 @@ En donde:
 
 ### Para _itinerarioSalida_
 
-```
-\*compararAlgoritmosSalida\*(a1:AlgoritmoItinerarioSalida, a2:AlgoritmoItinerarioSalida)
+*compararAlgoritmosSalida*(a1:AlgoritmoItinerarioSalida, a2:AlgoritmoItinerarioSalida)
 
-                            (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
+                           (vuelos:List[Vuelo], aeropuertos:List[Aeropuerto])
                           
-                            (cod1: String, cod2: String, h:Int, m:Int )
-```
-                          
-                          
+                           (cod1: String, cod2: String, h:Int, m:Int )
+                           
 En donde: 
 
 - a1 y a2 son las funciones que se desean analizar
