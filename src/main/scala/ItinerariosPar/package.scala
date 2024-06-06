@@ -91,14 +91,36 @@ package object ItinerariosPar {
   def itinerariosEscalasPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[Itinerario] = {
 
     (cod1: String, cod2: String) => {
-      val listaItinerarios = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
-
       def criterio(itinerario: Itinerario): Int = {
-        itinerario.par.map(_.Esc).sum + itinerario.par.length - 1
+        itinerario.map(_.Esc).sum + itinerario.length - 1
       }
-      listaItinerarios.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
+
+      val listaItinerarios = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
+      val longitud: Int = listaItinerarios.length
+      if (longitud < 8) listaItinerarios.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
+      else {
+        val l1: Int = longitud / 4
+        val l2: Int = longitud * 2 / 4
+        val l3: Int = longitud * 3 / 4
+
+        val (it1,it2,it3,it4) = parallel(
+          listaItinerarios.slice(0, l1),
+          listaItinerarios.slice(l1, l2),
+          listaItinerarios.slice(l2, l3),
+          listaItinerarios.slice(l3, longitud)
+        )
+        val (m1,m2,m3,m4) = parallel(
+          it1.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
+          it2.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
+          it3.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
+          it4.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
+        )
+
+        (m1++m2++m3++m4).sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
+      }
     }
   }
+
 
   //Funcion 4.4
   def itinerariosAirePar(vuelos : List [ Vuelo ] , aeropuertos : List [ Aeropuerto] ) : ( String , String )=>List [Itinerario ]= {
@@ -132,20 +154,41 @@ package object ItinerariosPar {
   }
 
   //Funcion 4.5
-  def itinerarioSalidaPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String, Int, Int) => Itinerario = {
+ def itinerarioSalidaPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String, Int, Int) => Itinerario = {
 
     (cod1: String, cod2: String, h: Int, m: Int) => {
-      val itinerario = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
 
       def calcularTiempoTotal(itinerario: Itinerario): Int = {
-        val ultimoVuelo = task(itinerario.last)
-        val minutosCita = task(h*60 + m)
-        val minutosLlegada = task(ultimoVuelo.join.HL*60 + ultimoVuelo.join.ML)
-        val tiempoAdicional = if (minutosCita.join >= minutosLlegada.join) minutosCita.join-minutosLlegada.join else {minutosCita.join-minutosLlegada.join + 24 * 60}
+        val ultimoVuelo = itinerario.last
+        val minutosCita = h*60 + m
+        val minutosLlegada = ultimoVuelo.HL*60 + ultimoVuelo.ML
+        val tiempoAdicional = if (minutosCita >= minutosLlegada) minutosCita-minutosLlegada else {minutosCita-minutosLlegada + 24 * 60}
         tiempoAcumulado(itinerario, aeropuertos, tiempoAdicional)
       }
 
-      itinerario.minByOption { listaVuelos => calcularTiempoTotal(listaVuelos) }
-    }.getOrElse(List.empty)
+      val itinerario = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
+      val longitud: Int = itinerario.length
+      if (longitud < 8) itinerario.minByOption { listaVuelos => calcularTiempoTotal(listaVuelos) }.getOrElse(List.empty)
+      else {
+        val l1: Int = longitud / 4
+        val l2: Int = longitud * 2 / 4
+        val l3: Int = longitud * 3 / 4
+
+        val (it1,it2,it3,it4) = parallel(
+          itinerario.slice(0, l1),
+          itinerario.slice(l1, l2),
+          itinerario.slice(l2, l3),
+          itinerario.slice(l3, longitud)
+        )
+        val (m1,m2,m3,m4) = parallel(
+          it1.map(listaVuelos => (listaVuelos, calcularTiempoTotal(listaVuelos))).minByOption(_._2).getOrElse((List.empty[Vuelo], 0)),
+          it2.map(listaVuelos => (listaVuelos, calcularTiempoTotal(listaVuelos))).minByOption(_._2).getOrElse((List.empty[Vuelo], 0)),
+          it3.map(listaVuelos => (listaVuelos, calcularTiempoTotal(listaVuelos))).minByOption(_._2).getOrElse((List.empty[Vuelo], 0)),
+          it4.map(listaVuelos => (listaVuelos, calcularTiempoTotal(listaVuelos))).minByOption(_._2).getOrElse((List.empty[Vuelo], 0))
+        )
+
+        List(m1,m2,m3,m4).minBy(_._2)._1
+      }
+    }
   }
 }
