@@ -115,8 +115,7 @@ package object ItinerariosPar {
 
     //Calcula el tiempo total de vuelo de un itinerario
     def calcularTiempoPar (v:Itinerario):Int = {
-        val cadaTiempo =  v.par map (i => task(funTiempoPar(i)))
-        (cadaTiempo map (_.join)).sum
+      (v.par map (i => funTiempoPar(i))).sum
     }
 
     //Funcion de salida, calcula los tres itinerarios que tienen menor tiempo en el aire
