@@ -94,11 +94,33 @@ package object ItinerariosPar {
       def criterio(itinerario: Itinerario): Int = {
         itinerario.map(_.Esc).sum + itinerario.length - 1
       }
+
       val listaItinerarios = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
-      val listaParela = listaItinerarios map (it => (it, task(criterio(it))))
-      listaParela.sortBy(_._2.join).unzip._1.take(3)
+      val longitud: Int = listaItinerarios.length
+      if (longitud < 8) listaItinerarios.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
+      else {
+        val l1: Int = longitud / 4
+        val l2: Int = longitud * 2 / 4
+        val l3: Int = longitud * 3 / 4
+
+        val (it1,it2,it3,it4) = parallel(
+          listaItinerarios.slice(0, l1),
+          listaItinerarios.slice(l1, l2),
+          listaItinerarios.slice(l2, l3),
+          listaItinerarios.slice(l3, longitud)
+        )
+        val (m1,m2,m3,m4) = parallel(
+          it1.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
+          it2.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
+          it3.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
+          it4.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
+        )
+
+        (m1++m2++m3++m4).sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
+      }
     }
   }
+
 
   //Funcion 4.4
   def itinerariosAirePar(vuelos : List [ Vuelo ] , aeropuertos : List [ Aeropuerto] ) : ( String , String )=>List [Itinerario ]= {
@@ -106,9 +128,12 @@ package object ItinerariosPar {
     val funcionItinerarioPar = itinerariosPar(vuelos, aeropuertos)
     //Calcula el tiempo total de un solo vuelo
     def funTiempoPar(vuelo:Vuelo):Int = {    
-        val (a1, a2) = parallel(aeropuertos.par.filter(_.Cod == vuelo.Org), aeropuertos.par.filter(_.Cod == vuelo.Dst) )
-        val (gmtSalida, gmtLlegada) = parallel((a1.head).GMT/100, (a2.head).GMT/100)
-        val (horaSalida, horaLlegada) = parallel(( (vuelo.HS *60) + vuelo.MS) - gmtSalida, (vuelo.HL*60 + vuelo.ML) - gmtLlegada)
+        val a1 = aeropuertos.filter(_.Cod == vuelo.Org)
+        val a2 = aeropuertos.filter(_.Cod == vuelo.Dst)
+        val gmtSalida = (a1.head).GMT/100
+        val gmtLlegada = (a2.head).GMT/100
+        val horaSalida = ((vuelo.HS*60) + vuelo.MS) - gmtSalida
+        val horaLlegada = ((vuelo.HL*60) + vuelo.ML) - gmtLlegada
         val tiempoVuelo = horaLlegada - horaSalida
         if (tiempoVuelo <= 0) (24*60) + tiempoVuelo else tiempoVuelo
     }
@@ -132,7 +157,7 @@ package object ItinerariosPar {
   }
 
   //Funcion 4.5
- def itinerarioSalidaPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String, Int, Int) => Itinerario = {
+  def itinerarioSalidaPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String, Int, Int) => Itinerario = {
 
     (cod1: String, cod2: String, h: Int, m: Int) => {
 
