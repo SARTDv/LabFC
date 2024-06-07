@@ -94,33 +94,11 @@ package object ItinerariosPar {
       def criterio(itinerario: Itinerario): Int = {
         itinerario.map(_.Esc).sum + itinerario.length - 1
       }
-
       val listaItinerarios = itinerariosPar(vuelos,aeropuertos)(cod1,cod2)
-      val longitud: Int = listaItinerarios.length
-      if (longitud < 8) listaItinerarios.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
-      else {
-        val l1: Int = longitud / 4
-        val l2: Int = longitud * 2 / 4
-        val l3: Int = longitud * 3 / 4
-
-        val (it1,it2,it3,it4) = parallel(
-          listaItinerarios.slice(0, l1),
-          listaItinerarios.slice(l1, l2),
-          listaItinerarios.slice(l2, l3),
-          listaItinerarios.slice(l3, longitud)
-        )
-        val (m1,m2,m3,m4) = parallel(
-          it1.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
-          it2.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
-          it3.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3),
-          it4.sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
-        )
-
-        (m1++m2++m3++m4).sortWith((it1, it2) => criterio(it1) < criterio(it2)).take(3)
-      }
+      val listaParela = listaItinerarios map (it => (it, task(criterio(it))))
+      listaParela.sortBy(_._2.join).unzip._1.take(3)
     }
   }
-
 
   //Funcion 4.4
   def itinerariosAirePar(vuelos : List [ Vuelo ] , aeropuertos : List [ Aeropuerto] ) : ( String , String )=>List [Itinerario ]= {
